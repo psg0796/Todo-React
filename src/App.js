@@ -9,16 +9,17 @@ class App extends Component {
       items : [],
     }
     this.add = this.add.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.remove = this.remove.bind(this);
   }
 
   add(){
+    const new_Item = "new";
     this.setState(state => ({
-      items: state.items.concat(['new Item'])
+      items: state.items.concat([new_Item])
     }))
   }
 
-  handleClick(index){
+  remove(index){
     const items = this.state.items;
     items.splice(index,1);
     this.setState({items});
@@ -29,7 +30,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
         <div>Todo</div>
-        <List items={this.state.items} onClick={this.handleClick}/>
+        <List items={this.state.items} onClick={this.remove}/>
         <button onClick={this.add}>+</button>
         </header>
       </div>

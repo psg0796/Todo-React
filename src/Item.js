@@ -13,7 +13,8 @@ class Item extends Component{
   render() {
     return (
         <div>
-         <Button onClick={this.onClick} value={this.props.value} />
+        <input type="text" placeholder={this.props.value}/>
+        <Button onClick={this.onClick}/>
         </div>
       );
   }
@@ -22,7 +23,7 @@ class Item extends Component{
 function Button(props) {
     return (
       <button onClick={props.onClick}>
-          {props.value}
+      	X
       </button>);
 }
 

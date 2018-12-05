@@ -2,18 +2,49 @@ import React, { Component } from 'react';
 import Item from './Item';
 
 class List extends Component {
-  renderItem(i) {
-    return( 
-        <li>
-          <Item value={this.props.items[i]} onClick={this.props.onClick}/>
+
+  constructor(props){
+    super(props);
+    this.state = {
+      items : Array(0),
+    }
+
+    this.add = this.add.bind(this);
+    this.remove = this.remove.bind(this);
+    this.modify = this.modify.bind(this);
+  }
+
+  add() {
+    const new_Item = "new";
+    this.setState(state => ({
+      items: state.items.concat([new_Item])
+    }))
+  }
+
+  remove(index) {
+    this.state.items.splice(index,1);
+    this.setState({ state: this.state });
+  }
+
+  modify(index,value) {
+    this.state.items[index] = value;
+  }
+
+  renderItem(index) {
+    return(
+        <li key={index}>
+          <Item id={index} value={this.state.items[index]} onClick={this.remove} onChange={this.modify}/>
         </li>);
   }
 
   render() {
     return (
-        <ul>
-          {this.props.items.map((item, index) => this.renderItem(index))}
-        </ul>
+      <div>
+          <ul>
+            {this.state.items.map((item, index) => this.renderItem(index))}
+          </ul>
+          <button onClick={this.add}>+</button>
+        </div>
       )
   }
 }

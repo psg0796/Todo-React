@@ -4,7 +4,7 @@ class Item extends Component{
   constructor(props) {
     super(props);
     this.state = {
-    	value: "",
+    	value: this.props.value,
     }
     this.onClick = this.onClick.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -20,7 +20,6 @@ class Item extends Component{
   }
 
   render() {
-  	this.state.value = this.props.value;
   	return (
         <div>
         <input type="text" placeholder="new" value={this.state.value} onChange={this.onChange}/>

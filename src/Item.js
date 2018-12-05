@@ -1,13 +1,27 @@
 import React, { Component } from 'react';
+import isEqual from 'lodash';
 
 class Item extends Component{
   constructor(props) {
     super(props);
     this.state = {
-    	value: '',
+    	value: this.props.value,
     }
     this.onClick = this.onClick.bind(this);
     this.onChange = this.onChange.bind(this);
+  }
+
+  // componentDidMount() {
+  //   this.setState({
+  //     value: this.props.value,
+  //   });
+  // }
+
+  componentWillReceiveProps(nextProps) {
+    if (isEqual(this.props.value,nextProps.value) )
+    this.setState({
+      value: nextProps.value,
+    });
   }
 
   onClick() {
@@ -20,21 +34,23 @@ class Item extends Component{
   }
 
   render() {
-  	this.state.value = this.props.value;
   	return (
         <div>
         <input type="text" placeholder="new" value={this.state.value} onChange={this.onChange}/>
-        <Button onClick={this.onClick}/>
+        <Button onClick={this.onClick} type={this.props.type} />
         </div>
       );
   }
 }
 
 function Button(props) {
-    return (
-      <button onClick={props.onClick}>
-      	X
-      </button>);
+    if(props.type === '1')
+	    return (
+	      <button onClick={props.onClick}>
+	      	X
+	      </button>);
+	else 
+		return null;
 }
 
 export default Item;

@@ -1,57 +1,50 @@
 import React, { Component } from 'react';
 import Item from './Item';
+import isEqual from 'lodash';
 
 class List extends Component {
 
   constructor(props){
     super(props);
     this.state = {
-     list: [],
+     list: this.props.list,
      count: 0,
     }
 
     this.add = this.add.bind(this);
     this.remove = this.remove.bind(this);
-    this.modify = this.modify.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
-  componentDidMount() {
-    this.setState({
-      list: this.props.list,
-    });
-  }
+  // componentDidMount() {
+  //   this.setState({
+  //     list: this.props.list,
+  //   });
+  // }
 
   componentWillReceiveProps(nextProps) {
-    // console.log(nextProps.list);
-    // if (this.props.list )
+    if (isEqual(this.props.list,nextProps.list) )
     this.setState({
       list: nextProps.list,
     });
   }
 
   add() {
-    const new_Item = "";
-    this.setState({
-      list: this.state.list.concat([new_Item])
-    })
+    this.props.add( this.props.type );
   }
 
   remove(index) {
-    const new_list = this.state.list;
-    new_list.splice(index,1);
-    this.setState({ state: new_list });
+    this.props.remove( this.props.type,index );
   }
 
-  modify(index,value) {
-    const new_list = this.state.list;
-    new_list[index] = value;
-    this.setState({ list: new_list });
+  onChange(index,value) {
+    this.props.onChange(this.props.type, index, value);
   }
 
   renderItem(index) {
     return(
         <li key={index}>
-          <Item id={index} value={this.state.list[index]} onClick={this.remove} onChange={this.modify}/>
+          <Item id={index} type={this.props.type} value={this.state.list[index]} onClick={this.remove} onChange={this.onChange}/>
         </li>);
   }
   render() {
@@ -61,10 +54,17 @@ class List extends Component {
           <ul>
             {this.state.list.map((item, index) => this.renderItem(index))}
           </ul>
-          <button onClick={this.add}>+</button>
+          <Button onClick={this.add} type={this.props.type}/>
         </div>
       )
   }
+}
+
+function Button(props) {
+  if(props.type === '1')
+    return <button onClick={props.onClick}>+</button>
+  else 
+    return null;
 }
 
 export default List;

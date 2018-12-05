@@ -13,10 +13,10 @@ class App extends Component {
     this.change = this.change.bind(this);
   }
 
-  change(type) {
-    if(type === 1){
+  change(event) {
+    if(event.target.value === '1'){
       this.setState({ current_list: this.state.todo_list })
-    } else if(type === 2){
+    } else if(event.target.value === '2'){
       this.setState({ current_list: this.state.compltd_list })
     }
   }
@@ -26,12 +26,8 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
         <div>
-          <button onClick={() => this.change(1)}>
-            Todo
-          </button>
-          <button onClick={() => this.change(2)}>
-            Completed
-          </button>
+          <Button onClick={this.change} value='1' name="Todo" />
+          <Button onClick={this.change} value='2' name="Completed" />
         </div>
         <List list={this.state.current_list}/>
         </header>
@@ -40,4 +36,11 @@ class App extends Component {
   }
 }
 
+function Button(props){
+  return (
+      <button onClick={props.onClick} value={props.value}>
+        {props.name}
+      </button>
+    )
+}
 export default App;

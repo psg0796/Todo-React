@@ -6,12 +6,27 @@ class List extends Component {
   constructor(props){
     super(props);
     this.state = {
-     list: this.props.list,
+     list: [],
+     count: 0,
     }
 
     this.add = this.add.bind(this);
     this.remove = this.remove.bind(this);
     this.modify = this.modify.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({
+      list: this.props.list,
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // console.log(nextProps.list);
+    // if (this.props.list )
+    this.setState({
+      list: nextProps.list,
+    });
   }
 
   add() {
@@ -22,13 +37,15 @@ class List extends Component {
   }
 
   remove(index) {
-    this.state.list.splice(index,1);
-    this.setState({ state: this.state });
+    const new_list = this.state.list;
+    new_list.splice(index,1);
+    this.setState({ state: new_list });
   }
 
   modify(index,value) {
-    this.state.list[index] = value;
-    this.setState({ state: this.state });
+    const new_list = this.state.list;
+    new_list[index] = value;
+    this.setState({ list: new_list });
   }
 
   renderItem(index) {
@@ -37,8 +54,8 @@ class List extends Component {
           <Item id={index} value={this.state.list[index]} onClick={this.remove} onChange={this.modify}/>
         </li>);
   }
-
   render() {
+
     return (
       <div>
           <ul>

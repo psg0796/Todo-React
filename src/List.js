@@ -6,7 +6,7 @@ class List extends Component {
   constructor(props){
     super(props);
     this.state = {
-      items : Array(0),
+      items : [],
     }
 
     this.add = this.add.bind(this);
@@ -15,7 +15,7 @@ class List extends Component {
   }
 
   add() {
-    const new_Item = "new";
+    const new_Item = "";
     this.setState(state => ({
       items: state.items.concat([new_Item])
     }))
@@ -28,6 +28,7 @@ class List extends Component {
 
   modify(index,value) {
     this.state.items[index] = value;
+    this.setState({ state: this.state });
   }
 
   renderItem(index) {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {isEqual} from 'lodash';
 import PropTypes from 'prop-types';
 import Item from './Item';
+import './List.css';
 
 class List extends Component {
 
@@ -43,13 +44,12 @@ class List extends Component {
         </li>);
   }
   render() {
-
     return (
       <div>
           <ul>
             {this.state.list.map((item, index) => this.renderItem(index))}
           </ul>
-          <Button onClick={this.add} type={this.props.type}/>
+          <Button className="Button" onClick={this.add} type={this.props.type}/>
         </div>
       )
   }

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import List from './List';
-// import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import {isEqual} from 'lodash';
 
 class App extends Component {
   constructor(props){
@@ -10,9 +11,8 @@ class App extends Component {
       currentList: [],
       todoList: [],
       completedList: [],
-      type: "todo",
+      type: "",
     }
-    this.changeList = this.changeList.bind(this);
     this.add = this.add.bind(this);
     this.modify = this.modify.bind(this);
     this.remove = this.remove.bind(this);
@@ -24,12 +24,28 @@ class App extends Component {
     });
   }
   
-  changeList(event) {
-    if(event.target.value === "todo") {
-      this.setState({ currentList: this.state.todoList, type: "todo" })
-    } else if(event.target.value === "completed") {
-      this.setState({ currentList: this.state.completedList, type: "completed" })
+  renderTodo = () => {
+    if(!isEqual(this.state.type,"todo")) {
+      const newState = this.state;
+      newState.type = "todo";
+      newState.currentList = this.state.todoList;
+      this.setState({
+        state: newState,
+      })
     }
+    return <List list={this.state.currentList} type={this.state.type} onChange={this.modify} add={this.add} remove={this.remove} />;
+  }
+
+  renderCompleted = () => {
+    if(!isEqual(this.state.type,"completed")) {
+      const newState = this.state;
+      newState.type = "completed";
+      newState.currentList = this.state.completedList;
+      this.setState({
+        state: newState,
+      })
+    }
+    return <List list={this.state.currentList} type={this.state.type} onChange={this.modify} add={this.add} remove={this.remove} />;
   }
 
   modify(type, index, value) {
@@ -82,30 +98,37 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <fieldset>
+      <Router>
+        <div className="App">
+          <header className="App-header">
             <div>
-              <Button onClick={this.changeList} value="todo" name="Todo" currentType={this.state.type} />
-              <Button onClick={this.changeList} value="completed" name="Completed" currentType={this.state.type} />
+              <Link to="/todo">
+                <Button className="Button" name="Todo" value="todo" activeType={this.state.type} numOfItems={this.state.todoList.length} />
+              </Link>
+              <Link to="/completed">
+                <Button className="Button" name="Completed" value="completed" activeType={this.state.type} numOfItems={this.state.completedList.length} />
+              </Link>
             </div>
-            <List list={this.state.currentList} type={this.state.type} onChange={this.modify} add={this.add} remove={this.remove}/>
-          </fieldset>
-        </header>
-      </div>
+            <Route exact path="/" component={this.renderTodo} />
+            <Route path="/todo" component={this.renderTodo} />
+            <Route path="/completed" component={this.renderCompleted} />
+          </header>
+        </div>
+      </Router>
     );
   }
 }
 
 function Button(props){
   let btnClass = "btn";
-  if(props.currentType === props.value)
+  if(props.activeType === props.value)
     btnClass+=" btn-success";
   else
     btnClass+=" btn-info"
   return (
       <button className={btnClass} onClick={props.onClick} id={props.id} value={props.value}>
         {props.name}
+        <span className="badge">{props.numOfItems}</span>
       </button>
     )
 }

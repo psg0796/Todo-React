@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import isEqual from 'lodash';
 import PropTypes from 'prop-types';
+import './Item.css';
 
 class Item extends Component{
   constructor(props) {
@@ -30,9 +31,9 @@ class Item extends Component{
 
   render() {
   	return (
-        <div>
-        <input type="text" placeholder="new" value={this.state.value} onChange={this.onChange}/>
-        <Button onClick={this.onClick} type={this.props.type} />
+        <div className="Item">
+	        <input type="text" placeholder="new" value={this.state.value} onChange={this.onChange} />
+	        <Button onClick={this.onClick} type={this.props.type} />
         </div>
       );
   }
@@ -47,7 +48,7 @@ Item.propTypes = {
 }
 
 function Button(props) {
-	let btnClass = "btn btn-danger btn-md";
+	let btnClass = "btn btn-danger btn-sm";
     return (
       <button className={btnClass} onClick={props.onClick}>
       	X

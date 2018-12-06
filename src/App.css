@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  position: relative;
 }
 
 .App-header {
@@ -11,4 +12,10 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+.badge {
+	margin-left: 7%;
+}
+.btn {
+	margin-left: 10px;
 }

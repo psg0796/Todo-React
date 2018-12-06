@@ -47,8 +47,9 @@ Item.propTypes = {
 }
 
 function Button(props) {
+	let btnClass = "btn btn-danger btn-md";
     return (
-      <button onClick={props.onClick}>
+      <button className={btnClass} onClick={props.onClick}>
       	X
       </button>);
 }

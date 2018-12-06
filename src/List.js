@@ -64,8 +64,9 @@ List.propTypes = {
 }
 
 function Button(props) {
+  let btnClass = "btn btn-warning";
   if(props.type === "todo")
-    return <button onClick={props.onClick}>+</button>
+    return <button className={btnClass} onClick={props.onClick}>+</button>
   else 
     return null;
 }

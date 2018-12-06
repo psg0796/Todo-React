@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Item from './Item';
-import isEqual from 'lodash';
+import {isEqual} from 'lodash';
+import PropTypes from 'prop-types';
 
 class List extends Component {
 
@@ -16,14 +17,8 @@ class List extends Component {
     this.onChange = this.onChange.bind(this);
   }
 
-  // componentDidMount() {
-  //   this.setState({
-  //     list: this.props.list,
-  //   });
-  // }
-
   componentWillReceiveProps(nextProps) {
-    if (isEqual(this.props.list,nextProps.list) )
+    if (!isEqual(this.props.list,nextProps.list) )
     this.setState({
       list: nextProps.list,
     });
@@ -61,7 +56,7 @@ class List extends Component {
 }
 
 function Button(props) {
-  if(props.type === '1')
+  if(props.type === "todo")
     return <button onClick={props.onClick}>+</button>
   else 
     return null;

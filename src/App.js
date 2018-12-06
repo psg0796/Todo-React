@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import './App.css';
 import List from './List';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
       currentList: [],
-      todoList: [4,5,6],
-      compltdList: [7,8,9],
-      type: '1',
+      todoList: [],
+      completedList: [],
+      type: "todo",
     }
-    this.change = this.change.bind(this);
+    this.changeList = this.changeList.bind(this);
     this.add = this.add.bind(this);
     this.modify = this.modify.bind(this);
     this.remove = this.remove.bind(this);
@@ -23,34 +24,36 @@ class App extends Component {
     });
   }
   
-  change(event) {
-    if(event.target.value === '1'){
-      this.setState({ currentList: this.state.todoList, type: '1' })
-    } else if(event.target.value === '2'){
-      this.setState({ currentList: this.state.compltdList, type: '2' })
+  changeList(event) {
+    if(event.target.value === "todo"){
+
+      this.setState({ currentList: this.state.todoList, type: "todo" })
+    } else if(event.target.value === "completed"){
+      this.setState({ currentList: this.state.completedList, type: "completed" })
     }
   }
 
   modify(type, index, value) {
-    if(type === '1') {
+    if(type === "todo") {
       const newList = this.state.todoList;
       newList[index] = value;
       this.setState({ currentList: newList })
       this.setState({ todoList: newList })
-    } else if (type === '2') {
-      const newList = this.state.compltdList;
+    } else if (type === "completed") {
+      const newList = this.state.completedList;
       newList[index] = value;
       this.setState({ currentList: newList })
-      this.setState({ compltdList: newList })
+      this.setState({ completedList: newList })
     }
   }
 
   add(type){
     const newItem = "";
-    if (type === '1') {
+    if (type === "todo") {
+      const newList = this.state.todoList.concat([newItem]);
       this.setState({
-        todoList: this.state.todoList.concat([newItem]),
-        currentList: this.state.todoList
+        todoList: newList,
+        currentList: newList,
       })
     } else {
       console.log("error in add");
@@ -58,17 +61,23 @@ class App extends Component {
   }
 
   remove(type,index){
-    if(type === '1') {
+    if(type === "todo") {
       const newList = this.state.todoList;
-      this.setState({ compltdList: this.state.compltdList.concat(newList[index]) });
+      this.setState({ completedList: this.state.completedList.concat(newList[index]) });
       newList.splice(index,1);
       this.setState({
         todoList: newList,
-        currentList: this.state.todoList
+        currentList: newList,
       })
     }
-    else {
-      console.log("error in remove");
+    else if(type === "completed") {
+      const newList = this.state.completedList;
+      this.setState({ todoList: this.state.todoList.concat(newList[index]) });
+      newList.splice(index,1);
+      this.setState({
+        completedList: newList,
+        currentList: newList,
+      })
     }
   }
 
@@ -78,8 +87,8 @@ class App extends Component {
         <header className="App-header">
           <fieldset>
             <div>
-              <Button onClick={this.change} value='1' name="Todo" />
-              <Button onClick={this.change} value='2' name="Completed" />
+              <Button onClick={this.changeList} value="todo" name="Todo" />
+              <Button onClick={this.changeList} value="completed" name="Completed" />
             </div>
             <List list={this.state.currentList} type={this.state.type} onChange={this.modify} add={this.add} remove={this.remove}/>
           </fieldset>

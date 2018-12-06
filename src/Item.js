@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import isEqual from 'lodash';
+import PropTypes from 'prop-types';
 
 class Item extends Component{
   constructor(props) {
@@ -10,12 +11,6 @@ class Item extends Component{
     this.onClick = this.onClick.bind(this);
     this.onChange = this.onChange.bind(this);
   }
-
-  // componentDidMount() {
-  //   this.setState({
-  //     value: this.props.value,
-  //   });
-  // }
 
   componentWillReceiveProps(nextProps) {
     if (isEqual(this.props.value,nextProps.value) )
@@ -43,14 +38,19 @@ class Item extends Component{
   }
 }
 
+Item.propTypes = {
+	value: PropTypes.string.isRequired,
+	id: PropTypes.number.isRequired,
+	onClick: PropTypes.func.isRequired,
+	onChange: PropTypes.func.isRequired,
+	type: PropTypes.string.isRequired,
+}
+
 function Button(props) {
-    if(props.type === '1')
-	    return (
-	      <button onClick={props.onClick}>
-	      	X
-	      </button>);
-	else 
-		return null;
+    return (
+      <button onClick={props.onClick}>
+      	X
+      </button>);
 }
 
 export default Item;

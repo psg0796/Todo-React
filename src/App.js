@@ -1,98 +1,71 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import './App.css';
-import List from './List';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import {isEqual} from 'lodash';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { concat, isEqual, remove } from 'lodash';
+import { APP, TODO, COMPLETED } from './Enum';
+import HandleList from './HandleList';
+import Button from './Button';
 
-class App extends Component {
-  constructor(props){
+class App extends PureComponent {
+  constructor(props) {
     super(props);
     this.state = {
-      currentList: [],
       todoList: [],
       completedList: [],
-      type: "",
-    }
+      type: '',
+    };
     this.add = this.add.bind(this);
+    this.changeType = this.changeType.bind(this);
     this.modify = this.modify.bind(this);
     this.remove = this.remove.bind(this);
   }
 
-  componentDidMount() {
-    this.setState({
-      currentList: this.state.todoList,
-    });
-  }
-  
-  renderTodo = () => {
-    if(!isEqual(this.state.type,"todo")) {
-      const newState = this.state;
-      newState.type = "todo";
-      newState.currentList = this.state.todoList;
-      this.setState({
-        state: newState,
-      })
+  add(type, elementAdd) {
+    const newItem = elementAdd;
+    if (isEqual(type, TODO)) {
+      let { todoList } = this.state;
+      todoList = concat(todoList, newItem);
+      this.setState({ todoList });
+    } else if (isEqual(type, COMPLETED)) {
+      let { completedList } = this.state;
+      completedList = concat(completedList, newItem);
+      this.setState({ completedList });
     }
-    return <List list={this.state.currentList} type={this.state.type} onChange={this.modify} add={this.add} remove={this.remove} />;
   }
 
-  renderCompleted = () => {
-    if(!isEqual(this.state.type,"completed")) {
-      const newState = this.state;
-      newState.type = "completed";
-      newState.currentList = this.state.completedList;
-      this.setState({
-        state: newState,
-      })
+  changeType(type) {
+    if (isEqual(type, TODO)) {
+      this.setState({ type: TODO });
+    } else if (isEqual(type, COMPLETED)) {
+      this.setState({ type: COMPLETED });
     }
-    return <List list={this.state.currentList} type={this.state.type} onChange={this.modify} add={this.add} remove={this.remove} />;
   }
 
   modify(type, index, value) {
-    if(type === "todo") {
-      const newList = this.state.todoList;
-      newList[index] = value;
-      this.setState({ currentList: newList })
-      this.setState({ todoList: newList })
-    } else if (type === "completed") {
-      const newList = this.state.completedList;
-      newList[index] = value;
-      this.setState({ currentList: newList })
-      this.setState({ completedList: newList })
+    if (isEqual(type, TODO)) {
+      const { todoList } = this.state;
+      todoList[index] = value;
+      this.setState({ todoList });
+    } else if (isEqual(type, COMPLETED)) {
+      const { completedList } = this.state;
+      completedList[index] = value;
+      this.setState({ completedList });
     }
   }
 
-  add(type){
-    const newItem = "";
-    if (type === "todo") {
-      const newList = this.state.todoList.concat([newItem]);
-      this.setState({
-        todoList: newList,
-        currentList: newList,
-      })
-    } else {
-      console.log("error in add");
-    }
-  }
-
-  remove(type,index){
-    if(type === "todo") {
-      const newList = this.state.todoList;
-      this.setState({ completedList: this.state.completedList.concat(newList[index]) });
-      newList.splice(index,1);
-      this.setState({
-        todoList: newList,
-        currentList: newList,
-      })
-    }
-    else if(type === "completed") {
-      const newList = this.state.completedList;
-      this.setState({ todoList: this.state.todoList.concat(newList[index]) });
-      newList.splice(index,1);
-      this.setState({
-        completedList: newList,
-        currentList: newList,
-      })
+  remove(type, index) {
+    let count = -1;
+    if (isEqual(type, TODO)) {
+      const { todoList } = this.state;
+      const elementRemoved = remove(todoList, () => { count += 1; return isEqual(count, index); });
+      this.setState({ todoList });
+      this.add(COMPLETED, elementRemoved[0]);
+    } else if (isEqual(type, COMPLETED)) {
+      const { completedList } = this.state;
+      const elementRemoved = remove(completedList,
+        () => { count += 1; return isEqual(count, index); });
+      this.setState({ completedList });
+      this.add(TODO, elementRemoved[0]);
     }
   }
 
@@ -101,36 +74,34 @@ class App extends Component {
       <Router>
         <div className="App">
           <header className="App-header">
-            <div>
+            <div className="listDisplay">
               <Link to="/todo">
-                <Button className="Button" name="Todo" value="todo" activeType={this.state.type} numOfItems={this.state.todoList.length} />
+                <Button
+                  workingLink={APP}
+                  name={TODO}
+                  value={TODO}
+                  activeType={this.state.type}
+                  numOfItems={this.state.todoList.length}
+                />
               </Link>
               <Link to="/completed">
-                <Button className="Button" name="Completed" value="completed" activeType={this.state.type} numOfItems={this.state.completedList.length} />
+                <Button
+                  workingLink={APP}
+                  name={COMPLETED}
+                  value={COMPLETED}
+                  activeType={this.state.type}
+                  numOfItems={this.state.completedList.length}
+                />
               </Link>
+              <Route exact path="/" component={() => <HandleList changeType={this.changeType} list={this.state.todoList} type={TODO} onChange={this.modify} add={this.add} remove={this.remove} />} />
+              <Route path="/todo" component={() => <HandleList changeType={this.changeType} list={this.state.todoList} type={TODO} onChange={this.modify} add={this.add} remove={this.remove} />} />
+              <Route path="/completed" component={() => <HandleList changeType={this.changeType} list={this.state.completedList} type={COMPLETED} onChange={this.modify} add={this.add} remove={this.remove} />} />
             </div>
-            <Route exact path="/" component={this.renderTodo} />
-            <Route path="/todo" component={this.renderTodo} />
-            <Route path="/completed" component={this.renderCompleted} />
           </header>
         </div>
       </Router>
     );
   }
-}
-
-function Button(props){
-  let btnClass = "btn";
-  if(props.activeType === props.value)
-    btnClass+=" btn-success";
-  else
-    btnClass+=" btn-info"
-  return (
-      <button className={btnClass} onClick={props.onClick} id={props.id} value={props.value}>
-        {props.name}
-        <span className="badge">{props.numOfItems}</span>
-      </button>
-    )
 }
 
 export default App;

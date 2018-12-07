@@ -1,6 +1,12 @@
 .App {
   text-align: center;
-  position: relative;
+  position: absolute;
+  width: 100%;
+}
+
+.listDisplay {
+	width: 50%;
+	text-align: center;
 }
 
 .App-header {
@@ -13,9 +19,12 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
 .badge {
 	margin-left: 7%;
 }
+
 .btn {
+	text-align: center;
 	margin-left: 10px;
 }

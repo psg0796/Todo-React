@@ -144,7 +144,7 @@ class Chart extends React.Component{
 
   render(){
     const options = this.props.list.map((listEntry) =>
-      <option value={listEntry.id}>{listEntry.id}</option>);
+      <option value={listEntry.id} selected={listEntry.id === this.props.xValue? true: false}>{listEntry.id}</option>);
     return (
       <React.Fragment>
         <HighchartsReact highcharts={Highcharts} ref={(high) => this.high = high} options={this.state.options} />
